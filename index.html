@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AFK Journey talent tree planner v1</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f3f3;
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* Center horizontally */
+      justify-content: flex-start; /* Align items to start for navbar */
+      height: 100vh; /* Full height of viewport */
+    }
+
+    /* Top Navbar */
+    .navbar {
+      width: 100%;
+      background-color: #333;
+      overflow: hidden;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10000;
+    }
+
+    .navbar a {
+      float: left;
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 20px;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .navbar a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+
+    .active {
+      background-color: #04AA6D;
+      color: white;
+    }
+
+    /* Grid styling */
+    .container {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(29, 100px); /* Update to 29 rows */
+      gap: 40px;
+      position: relative;
+      margin-top: 60px; /* Space for the navbar */
+      padding: 20px;
+      align-items: center; /* Center items vertically */
+      justify-content: center; /* Center items horizontally */
+      flex-grow: 1; /* Allow the container to grow */
+    }
+
+    /* Button Styling */
+    button {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #ffdd57;
+      border: 2px solid #333;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .total {
+      position: fixed;
+      top: 50px;
+      right: 20px;
+      font-size: 24px;
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+    }
+
+    .page-total {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      font-size: 20px;
+      background-color: #666;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 10px;
+    }
+
+    .clicked-buttons {
+      position: fixed;
+      top: 150px;
+      right: 20px;
+      font-size: 20px;
+      background-color: #666;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 10px;
+    }
+
+    /* Positioning for rows in the grid */
+    .row-1 {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .row-2 {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .row-3-left {
+      grid-column: 1;
+      grid-row: 3;
+    }
+
+    .row-3-right {
+      grid-column: 3;
+      grid-row: 3;
+    }
+
+    .row-4-left {
+      grid-column: 1;
+      grid-row: 4;
+    }
+
+    .row-4-right {
+      grid-column: 3;
+      grid-row: 4;
+    }
+
+    .row-5-left {
+      grid-column: 1;
+      grid-row: 5;
+    }
+
+    .row-5-right {
+      grid-column: 3;
+      grid-row: 5;
+    }
+
+    .row-6 {
+      grid-column: 2;
+      grid-row: 6;
+    }
+
+    .row-7 {
+      grid-column: 2;
+      grid-row: 7;
+    }
+
+    .gap {
+      grid-column: 2;
+      grid-row: 8;
+    }
+
+    .row-9 {
+      grid-column: 2;
+      grid-row: 9;
+    }
+
+    .row-10 {
+      grid-column: 2;
+      grid-row: 10;
+    }
+
+    .row-11-left {
+      grid-column: 1;
+      grid-row: 11;
+    }
+
+    .row-11-right {
+      grid-column: 3;
+      grid-row: 11;
+    }
+
+    .row-12-left {
+      grid-column: 1;
+      grid-row: 12;
+    }
+
+    .row-12-right {
+      grid-column: 3;
+      grid-row: 12;
+    }
+
+    .row-13 {
+      grid-column: 2;
+      grid-row: 13;
+    }
+
+    .row-14-left {
+      grid-column: 1;
+      grid-row: 14;
+    }
+
+    .row-14-right {
+      grid-column: 3;
+      grid-row: 14;
+    }
+
+    .row-15 {
+      grid-column: 2;
+      grid-row: 15;
+    }
+
+    .row-16 {
+      grid-column: 2;
+      grid-row: 16;
+    }
+
+    .row-17 {
+      grid-column: 2;
+      grid-row: 17;
+    }
+
+    .row-18-left {
+      grid-column: 1;
+      grid-row: 18;
+    }
+
+    .row-18-right {
+      grid-column: 3;
+      grid-row: 18;
+    }
+
+    .row-19 {
+      grid-column: 2;
+      grid-row: 19;
+    }
+
+    .row-20-left {
+      grid-column: 1;
+      grid-row: 20;
+    }
+
+    .row-20-right {
+      grid-column: 3;
+      grid-row: 20;
+    }
+
+    .row-21-left {
+      grid-column: 1;
+      grid-row: 21;
+    }
+
+    .row-21-center {
+      grid-column: 2;
+      grid-row: 21;
+    }
+
+    .row-21-right {
+      grid-column: 3;
+      grid-row: 21;
+    }
+
+    .row-22 {
+      grid-column: 2;
+      grid-row: 22;
+    }
+
+    .row-23 {
+      grid-column: 2;
+      grid-row: 23;
+    }
+
+    .row-24 {
+      grid-column: 2;
+      grid-row: 24;
+    }
+
+    .row-25 {
+      grid-column: 2;
+      grid-row: 25;
+    }
+
+    .row-26-left {
+      grid-column: 1;
+      grid-row: 26;
+    }
+
+    .row-26-right {
+      grid-column: 3;
+      grid-row: 26;
+    }
+
+    .row-27-left {
+      grid-column: 1;
+      grid-row: 27;
+    }
+
+    .row-27-right {
+      grid-column: 3;
+      grid-row: 27;
+    }
+
+    .row-28-left {
+      grid-column: 1;
+      grid-row: 28;
+    }
+
+    .row-28-right {
+      grid-column: 3;
+      grid-row: 28;
+    }
+
+    .row-29 {
+      grid-column: 2;
+      grid-row: 29;
+    }
+
+    /* Navbar link styles */
+    .nav-link.active[data-page="0"] {
+      background-color: rgb(101, 182, 220);
+    }
+
+    .nav-link.active[data-page="1"] {
+      background-color: rgb(147, 224, 178);
+    }
+
+    .nav-link.active[data-page="2"] {
+      background-color: rgb(219, 103, 78);
+    }
+
+    .nav-link.active[data-page="3"] {
+      background-color: rgb(50, 59, 58);
+    }
+
+    .nav-link.active[data-page="4"] {
+      background-color: rgb(153, 66, 145);
+    }
+
+    /* Button styles */
+    .container button.active[data-page="0"] {
+      background-color: rgb(101, 182, 220);
+    }
+
+    .container button.active[data-page="1"] {
+      background-color: rgb(147, 224, 178);
+    }
+
+    .container button.active[data-page="2"] {
+      background-color: rgb(219, 103, 78);
+    }
+
+    .container button.active[data-page="3"] {
+      background-color: rgb(50, 59, 58);
+    }
+
+    .container button.active[data-page="4"] {
+      background-color: rgb(153, 66, 145);
+    }
+
+    .mode-button {
+      float: right;
+      height: 50px;
+      width: 50px;
+      font-size: 16px;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+  <a href="#" class="nav-link active " data-page="0">Lightbearer</a>
+  <a href="#" class="nav-link" data-page="1">Wilder</a>
+  <a href="#" class="nav-link" data-page="2">Mauler</a>
+  <a href="#" class ="nav-link" data-page="3">Graveborn</a>
+  <a href="#" class="nav-link" data-page="4">Celestial/Hypogean</a>
+  <button class="mode-button" id="light-mode-button">Light Mode</button>
+  <button class="mode-button" id="dark-mode-button">Dark Mode</button>
+</div>
+
+<!-- The Grid Layout -->
+<div class="container" id="grid-container"></div>
+
+<div class="total" id="total">Combined Total: 0</div>
+<div class="page-total" id="page-total">Page Total: 0</div>
+<div class="clicked-buttons" id="clicked-buttons">Clicked Buttons: 0</div>
+
+<!-- Footer -->
+<div class="footer">
+  Made by Soap Cracker
+</div>
+
+<script>
+  const gridContainer = document.getElementById('grid-container');
+  const combinedTotalDisplay = document.getElementById('total');
+  const pageTotalDisplay = document.getElementById('page-total');
+  const clickedButtonsDisplay = document.getElementById('clicked-buttons');
+  
+  const buttonValues = [
+    { value: 0, id: 'row-1' },
+    { value: 35, id: 'row-2' },
+    { value: 35, id: 'row-3-left' },
+    { value: 35, id: 'row-3-right' },
+    { value: 90, id: 'row-4-left' },
+    { value: 90, id: 'row-4-right' },
+    { value: 35, id: 'row-5-left' },
+    { value: 35, id: 'row-5-right' },
+    { value: 220, id: 'row-6' },
+    { value: 35, id: 'row-7' },
+    { value: 70, id: 'row-9' },
+    { value: 70, id: 'row-10' },
+    { value: 175, id: 'row-11-left' },
+    { value: 175, id: 'row-11-right' },
+    { value: 70, id: 'row-12-left' },
+    { value: 70, id: 'row-12-right' },
+    { value: 350, id: 'row-13' },
+    { value: 70, id: 'row-14-left' },
+    { value: 70, id: 'row-14-right' },
+    { value: 495, id: 'row-15' },
+    { value: 110, id: 'row-17' },
+    { value: 115, id: 'row-18-left' },
+    { value: 120, id: 'row-18-right' },
+    { value: 125, id: 'row-19' },
+    { value: 130, id: 'row-20-left' },
+    { value: 135, id: 'row-20-right' },
+    { value: 140, id: 'row-21-left' },
+    { value: 145, id: 'row-21-center' },
+    { value: 150, id: 'row-21-right' },
+    { value: 155, id: 'row-22' },
+    { value: 160, id: 'row-24' },
+    { value: 165, id: 'row-25' },
+    { value: 170, id: 'row-26-left' },
+    { value: 175, id: 'row-26-right' },
+    { value: 180, id: 'row-27-left' },
+    { value: 185, id: 'row-27-right' },
+    { value: 190, id: 'row-28-left' },
+    { value: 195, id: 'row-28-right' },
+    { value: 200, id: 'row-29' }
+  ];
+
+  let combinedTotal = 0;
+  const pageTotals = [0, 0, 0, 0, 0]; // Stores total for each page
+  let currentPage = 0;
+  const buttonStates = Array(5).fill(null).map(() => Array(buttonValues.length).fill(false)); // Stores state of each button for each page
+  const clickedButtons = Array(5).fill(0); // Stores the number of clicked buttons for each page
+
+  // Function to update total display
+  function updateTotalDisplay() {
+    combinedTotalDisplay.textContent = `Combined Total: ${combinedTotal}`;
+const navLinks = document.querySelectorAll('.nav-link');
+    const currentPageName = navLinks[currentPage].textContent;
+    pageTotalDisplay.textContent = `${currentPageName} Total: ${pageTotals[currentPage]}`;
+    clickedButtonsDisplay.textContent = `${currentPageName} Tiles allocated: ${clickedButtons[currentPage]}`;
+  }
+
+  // Function to create buttons dynamically for the grid
+function createGrid(pageIndex) {
+    gridContainer.innerHTML = ''; // Clear the grid first
+
+    buttonValues.forEach((buttonData, index) => {
+      const button = document.createElement('button');
+      button.setAttribute('data-value', buttonData.value);
+      button.setAttribute('data-page', pageIndex);
+      button .textContent = buttonData.value;
+      button.classList.add(buttonData.id);
+      
+      if (buttonStates[pageIndex][index]) {
+        button.classList.add('active');
+      }
+
+      button.addEventListener('click', () => {
+        const value = parseInt(button.getAttribute('data-value'));
+        
+        if (button.classList.contains('active')) {
+          combinedTotal -= value;
+          pageTotals[pageIndex] -= value;
+          button.classList.remove('active');
+          buttonStates[pageIndex][index] = false;
+          clickedButtons[pageIndex]--;
+        } else {
+          combinedTotal += value;
+          pageTotals[pageIndex] += value;
+          button.classList.add('active');
+          buttonStates[pageIndex][index] = true;
+          clickedButtons[pageIndex]++;
+        }
+
+        updateTotalDisplay();
+      });
+      
+      gridContainer.appendChild(button);
+    });
+
+    updateTotalDisplay();
+  }
+
+  // Navigation functionality
+  const navLinks = document.querySelectorAll('.nav-link');
+  navLinks.forEach(navLink => {
+    navLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      navLinks.forEach(link => link.classList.remove('active'));
+      navLink.classList.add('active');
+
+      currentPage = parseInt(navLink.getAttribute('data-page'));
+      createGrid(currentPage);
+    });
+  });
+
+  // Mode buttons functionality
+  const lightModeButton = document.getElementById('light-mode-button');
+  const darkModeButton = document.getElementById('dark-mode-button');
+
+  lightModeButton.addEventListener('click', () => {
+    document.body.style.background = 'white';
+  });
+
+  darkModeButton.addEventListener('click', () => {
+    document.body.style.background = '#333';
+  });
+
+  // Create the initial grid
+  createGrid(currentPage);
+</script>
+
+</body>
+</html>
